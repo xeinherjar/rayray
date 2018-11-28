@@ -1,0 +1,6 @@
+[package]
+name = "rayray"
+version = "0.1.0"
+authors = ["einherjar <proto.merkabah@gmail.com>"]
+
+[dependencies]
