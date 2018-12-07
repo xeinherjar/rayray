@@ -2,7 +2,7 @@ pub use std::f64::{EPSILON};
 use std::ops;
 use point3d::{Point3D};
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub struct Vector3D {
     pub x: f64,
     pub y: f64,
@@ -15,21 +15,33 @@ impl Vector3D {
         Vector3D{ x: x, y: y, z: z, w: 0.0 }
     }
 
-    fn magnitude(&self) -> f64 {
+    pub fn magnitude(&self) -> f64 {
         ((self.x * self.x) + (self.y * self.y) + (self.z * self.z)).sqrt()
     }
 
-    fn normalize(&self) -> Vector3D {
+    pub fn normalize(&self) -> Vector3D {
         let m = self.magnitude();
         Vector3D::new(self.x / m, self.y / m, self.z / m)
+    }
+
+    pub fn dot(&self, other: Vector3D) -> f64 {
+        (self.x * other.x) + (self.y * other.y) + (self.z * other.z)
+    }
+
+    pub fn cross(&self, other: Vector3D) -> Vector3D {
+        Vector3D::new(
+            (self.y * other.z) - (self.z * other.y),
+            (self.z * other.x) - (self.x * other.z),
+            (self.x * other.y) - (self.y * other.x)
+        )
     }
 }
 
 impl PartialEq for Vector3D {
     fn eq(&self, other: &Vector3D) -> bool {
         (self.x - other.x).abs() < EPSILON &&
-        (self.y - other.y).abs() < EPSILON &&
-        (self.z - other.z).abs() < EPSILON
+            (self.y - other.y).abs() < EPSILON &&
+            (self.z - other.z).abs() < EPSILON
     }
 }
 
@@ -37,8 +49,8 @@ impl ops::Add<Point3D> for Vector3D {
     type Output = Point3D;
     fn add(self, point: Point3D) -> Point3D {
         Point3D::new(self.x + point.x,
-                   self.y + point.y,
-                   self.z + point.z)
+                     self.y + point.y,
+                     self.z + point.z)
     }
 }
 
@@ -46,8 +58,8 @@ impl ops::Add<Vector3D> for Vector3D {
     type Output = Vector3D;
     fn add(self, vec: Vector3D) -> Vector3D {
         Vector3D::new(self.x + vec.x,
-                    self.y + vec.y,
-                    self.z + vec.z)
+                      self.y + vec.y,
+                      self.z + vec.z)
     }
 }
 
@@ -55,8 +67,8 @@ impl ops::Sub<Vector3D> for Vector3D {
     type Output = Vector3D;
     fn sub(self, vec: Vector3D) -> Vector3D {
         Vector3D::new(self.x - vec.x,
-                    self.y - vec.y,
-                    self.z - vec.z)
+                      self.y - vec.y,
+                      self.z - vec.z)
     }
 }
 
@@ -66,7 +78,6 @@ impl ops::Neg for Vector3D {
         Vector3D::new(-self.x, -self.y, -self.z)
     }
 }
-
 
 
 
@@ -166,4 +177,23 @@ mod tests {
         assert_eq!(1.0, normal);
     }
 
+    #[test]
+    fn vector_dot_product() {
+        let v1 = Vector3D::new(1.0, 2.0, 3.0);
+        let v2 = Vector3D::new(2.0, 3.0, 4.0);
+        let dot = v1.dot(v2);
+        assert_eq!(20.0, dot);
+    }
+
+    #[test]
+    fn vector_cross_product() {
+        let v1 = Vector3D::new(1.0, 2.0, 3.0);
+        let v2 = Vector3D::new(2.0, 3.0, 4.0);
+        let v1cross = v1.cross(v2);
+        let v2cross = v2.cross(v1);
+        let v1c = Vector3D::new(-1.0, 2.0, -1.0);
+        let v2c = Vector3D::new(1.0, -2.0, 1.0);
+        assert_eq!(v1c, v1cross);
+        assert_eq!(v2c, v2cross);
+    }
 }

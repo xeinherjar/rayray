@@ -19,8 +19,8 @@ impl Point3D {
 impl PartialEq for Point3D {
     fn eq(&self, other: &Point3D) -> bool {
         (self.x - other.x).abs() < EPSILON &&
-        (self.y - other.y).abs() < EPSILON &&
-        (self.z - other.z).abs() < EPSILON
+            (self.y - other.y).abs() < EPSILON &&
+            (self.z - other.z).abs() < EPSILON
     }
 }
 
@@ -28,8 +28,8 @@ impl ops::Add<Vector3D> for Point3D {
     type Output = Point3D;
     fn add(self, vec: Vector3D) -> Point3D {
         Point3D::new(self.x + vec.x,
-                   self.y + vec.y,
-                   self.z + vec.z)
+                     self.y + vec.y,
+                     self.z + vec.z)
     }
 }
 
@@ -37,8 +37,8 @@ impl ops::Sub<Vector3D> for Point3D {
     type Output = Point3D;
     fn sub(self, vec: Vector3D) -> Point3D {
         Point3D::new(self.x - vec.x,
-                   self.y - vec.y,
-                   self.z - vec.z)
+                     self.y - vec.y,
+                     self.z - vec.z)
     }
 }
 
@@ -46,8 +46,8 @@ impl ops::Sub<Point3D> for Point3D {
     type Output = Vector3D;
     fn sub(self, point: Point3D) -> Vector3D {
         Vector3D::new(self.x - point.x,
-                    self.y - point.y,
-                    self.z - point.z)
+                      self.y - point.y,
+                      self.z - point.z)
     }
 }
 

@@ -15,24 +15,48 @@ impl Tuple3D {
     pub fn new(x: f64, y: f64, z: f64, w: f64) -> Tuple3D {
         Tuple3D{ x: x, y: y, z: z, w: w }
     }
+
+    fn magnitude(&self) -> f64 {
+        ((self.x * self.x) + (self.y * self.y) + (self.z * self.z) + (self.w * self.w)).sqrt()
+    }
+
+    fn normalize(&self) -> Tuple3D {
+        let m = self.magnitude();
+        Tuple3D::new(self.x / m, self.y / m, self.z / m, self.w / m)
+    }
+
+    fn dot(&self, other: Tuple3D) -> f64 {
+        (self.x * other.x) + (self.y * other.y) + (self.z * other.z) + (self.w + other.w)
+    }
+
 }
 
 impl PartialEq for Tuple3D {
     fn eq(&self, other: &Tuple3D) -> bool {
         (self.x - other.x).abs() < EPSILON &&
-        (self.y - other.y).abs() < EPSILON &&
-        (self.z - other.z).abs() < EPSILON &&
-        (self.w - other.w).abs() < EPSILON
+            (self.y - other.y).abs() < EPSILON &&
+            (self.z - other.z).abs() < EPSILON &&
+            (self.w - other.w).abs() < EPSILON
     }
 }
 
 impl ops::Add<Tuple3D> for Tuple3D {
     type Output = Tuple3D;
-    fn add(self, vec: Tuple3D) -> Tuple3D {
-        Tuple3D::new(self.x + vec.x,
-                    self.y + vec.y,
-                    self.z + vec.z,
-                    self.w + vec.w)
+    fn add(self, other: Tuple3D) -> Tuple3D {
+        Tuple3D::new(self.x + other.x,
+                     self.y + other.y,
+                     self.z + other.z,
+                     self.w + other.w)
+    }
+}
+
+impl ops::Sub<Tuple3D> for Tuple3D {
+    type Output = Tuple3D;
+    fn sub(self, other: Tuple3D) -> Tuple3D {
+        Tuple3D::new(self.x - other.x,
+                     self.y - other.y,
+                     self.z - other.z,
+                     self.w - other.w)
     }
 }
 
@@ -108,6 +132,14 @@ mod tests {
         let scaled = t1 / 2.0;
         let ns = Tuple3D::new(0.5, -1.0, 1.5, -2.0);
         assert_eq!(scaled, ns);
+    }
+
+    #[test]
+    fn tuple_dot_product() {
+        let t1 = Tuple3D::new(1.0, 2.0, 3.0, 0.0);
+        let t2 = Tuple3D::new(2.0, 3.0, 4.0, 0.0);
+        let dot = t1.dot(t2);
+        assert_eq!(20.0, dot);
     }
 }
 
